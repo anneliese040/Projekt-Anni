@@ -30,6 +30,7 @@ def init_db():
                 timestamp TEXT NOT NULL,
                 cpu REAL NOT NULL,
                 ram REAL NOT NULL,
+                disk REAL NOT NULL
             )
         """)
 
@@ -45,12 +46,12 @@ def init_db():
 
 Stats speichern
 
-def save_stat(timestamp, cpu, ram):
+def save_stat(timestamp, cpu, ram, disk):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO stats (timestamp, cpu, ram) VALUES (?,?,?)",
-            (timestamp, cpu, ram)
+            "INSERT INTO stats (timestamp, cpu, ram, disk) VALUES (?,?,?)",
+            (timestamp, cpu, ram, disk)
         )
 
 
@@ -71,7 +72,7 @@ def get_recent_stats(limit=10):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT id, timestamp, cpu, ram FROM stats ORDER BY id DESC LIMIT?",
+            "SELECT id, timestamp, cpu, ram, disk FROM stats ORDER BY id DESC LIMIT?",
             (limit,)
         )
         return cursor.fetchall()
