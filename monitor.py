@@ -8,7 +8,7 @@ logging.basicConfig(
 while True:
     try:
         #Daten sammeln
-        data =collect_data()
+        data = collect_data()
         #Stats speichern
         save_stat(
             data["timestamp"],
