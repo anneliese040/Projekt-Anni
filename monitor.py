@@ -3,7 +3,7 @@ import time
 import datetime
 import psutil
 # Import von deiner datenbank.py
-from datenbank import save_stat, save_warning
+from db_module import save_stat, save_warning
 
 def collect_data():
     return {
