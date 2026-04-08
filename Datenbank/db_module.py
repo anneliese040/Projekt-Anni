@@ -24,7 +24,7 @@ Tabellen erstellen
 def init_db():
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        cursor.excute("""
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS stats (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp TEXT NOT NULL,
@@ -50,7 +50,7 @@ def save_stat(timestamp, cpu, ram, disk):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO stats (timestamp, cpu, ram, disk) VALUES (?,?,?.?)",
+            "INSERT INTO stats (timestamp, cpu, ram, disk) VALUES (?,?,?,?)",
             (timestamp, cpu, ram, disk)
         )
 
