@@ -23,7 +23,7 @@ Tabellen erstellen
 
 def init_db():
     with get_db_connection() as conn:
-        cursor = con.cursor()
+        cursor = conn.cursor()
         cursor.excute("""
             CREATE TABLE IF NOT EXISTS stats (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,7 +50,7 @@ def save_stat(timestamp, cpu, ram, disk):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO stats (timestamp, cpu, ram, disk) VALUES (?,?,?)",
+            "INSERT INTO stats (timestamp, cpu, ram, disk) VALUES (?,?,?.?)",
             (timestamp, cpu, ram, disk)
         )
 
@@ -72,7 +72,7 @@ def get_recent_stats(limit=10):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT id, timestamp, cpu, ram, disk FROM stats ORDER BY id DESC LIMIT?",
+            "SELECT id, timestamp, cpu, ram, disk FROM stats ORDER BY id DESC LIMIT ?",
             (limit,)
         )
         return cursor.fetchall()
@@ -80,11 +80,11 @@ def get_recent_stats(limit=10):
 
 Letzte Warnungen abrufen
 
-def get_recent_stats(limit=10):
+def get_recent_warnings(limit=10):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT id, timestamp, component, value FROM warnings ORDER BY id DESC LIMIT?",
+            "SELECT id, timestamp, component, value FROM warnings ORDER BY id DESC LIMIT ?",
             (limit,)
         )
         return cursor.fetchall()
