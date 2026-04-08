@@ -1,8 +1,9 @@
-#Logging konfigurieren
 import logging
 import time
 import datetime
 import psutil
+# Import von deiner datenbank.py
+from datenbank import save_stat, save_warning
 
 def collect_data():
     return {
@@ -11,28 +12,29 @@ def collect_data():
         "ram": psutil.virtual_memory().percent,
         "disk": psutil.disk_usage('/').percent
     }
+
 def check_thresholds(data):
     warnings = []
-    if data["cpu"]> 80:
+    if data["cpu"] > 80:
         warnings.append((data["timestamp"], "CPU", data["cpu"]))
     if data["ram"] > 80:
         warnings.append((data["timestamp"], "RAM", data["ram"]))
-    if dat["disk"] > 80:
-      warnings.append((data["timestamp"], "Disk", data["disk"]))
+    if data["disk"] > 80: # Korrigiert von 'dat' zu 'data'
+        warnings.append((data["timestamp"], "Disk", data["disk"]))
     return warnings
 
-from db_module import save_stat, save_warning
-    
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+print("Monitoring gestartet... (Beenden mit Strg+C)")
+
 while True:
     try:
-        #Daten sammeln
         data = collect_data()
-        #Stats speichern
+        
+        # In Tabelle 'stats' speichern
         save_stat(
             data["timestamp"],
             data["cpu"],
@@ -40,14 +42,13 @@ while True:
             data["disk"]
         )
 
-        logging.info(f"Stats gespeichert: CPU={data['cpu']} RAM={data['ram']} Disk={data['disk']}")
-        #Warnung prüfen
+        logging.info(f"Stats gespeichert: CPU={data['cpu']}% RAM={data['ram']}%")
+        
         warnings = check_thresholds(data)
-        #Warnungen speichern
         for warn in warnings:
             timestamp, component, value = warn
             save_warning(timestamp, component, value)
-            logging.warning(f"Warnung: {component} = {value}")
+            logging.warning(f"Warnung: {component} = {value}%")
 
         time.sleep(5)
     
