@@ -10,10 +10,10 @@ PORT = 5000
 class LiveHandler(BaseHTTPRequestHandler):
     def do_GET(self):
     stats = get_recent_stats(10)
-    warnings = get recent_warning(10)
+    warnings = get_recent_warning(10)
 
     Aktuelle Live-Daten sammeln
-    current_data =collect_data()
+    current_data = collect_data()
     current_warnings = check_thresholds(current_data)
 
 
